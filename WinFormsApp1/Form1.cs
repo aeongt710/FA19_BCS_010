@@ -109,5 +109,37 @@ namespace WinFormsApp1
             int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
             toolStripStatusLabel4.Text = "Ln, " + line + " Col, " + column;
         }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (textBox1.SelectionLength > 0)
+            {
+                textBox1.Copy();
+            }
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (textBox1.SelectedText != "")
+            {
+                textBox1.Cut();
+            }
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Clipboard.GetDataObject().GetDataPresent(DataFormats.Text) == true)
+            {
+                if (textBox1.SelectionLength > 0)
+                {
+                     textBox1.SelectionStart = textBox1.SelectionStart + textBox1.SelectionLength;
+                }
+                else
+                {
+                    textBox1.Paste();
+                }
+ 
+            }
+        }
     }
 }
