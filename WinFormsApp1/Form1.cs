@@ -19,6 +19,57 @@ namespace WinFormsApp1
             this.Text = "Notepad";
             
         }
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveButton();
+        }
+
+        public void saveButton()
+        {
+            if (toolStripStatusLabel1.Text.Length == 0)
+            {
+                saveFileDialog1.FileName = "";
+                saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                saveFileDialog1.ShowDialog();
+                if (saveFileDialog1.FileName != "")
+                {
+                    File.WriteAllText(saveFileDialog1.FileName, textBox1.Text);
+                    toolStripStatusLabel1.Text = saveFileDialog1.FileName;
+                    toolStripStatusLabel2.Text = "";
+                }
+                else
+                {
+                    toolStripStatusLabel1.Text = "No file selected";
+                }
+            }
+            else
+            {
+                File.WriteAllText(toolStripStatusLabel1.Text, textBox1.Text);
+                toolStripStatusLabel2.Text = "";
+            }
+        }
+
+
+    private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileName = "";
+            openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog1.ShowDialog();
+            if ( openFileDialog1.FileName != "")
+            {
+                content = File.ReadAllText(openFileDialog1.FileName);
+                textBox1.Text = File.ReadAllText(openFileDialog1.FileName);
+            }
+        }
+
+
         //protected override void OnTextChanged(out Position line, out Position column)
         //{
         //    line = 0; column = 0;
@@ -32,51 +83,11 @@ namespace WinFormsApp1
         //    base.OnTextChanged(e);
         //}
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (toolStripStatusLabel1.Text.Length == 0)
-            {
-                saveFileDialog1.FileName = "";
-                saveFileDialog1.ShowDialog();
-                if (saveFileDialog1.FileName != "")
-                {
-                    File.WriteAllText(saveFileDialog1.FileName, textBox1.Text);
-                    toolStripStatusLabel1.Text = saveFileDialog1.FileName;
-                    toolStripStatusLabel2.Text = "";
-                }
-            }
-            else
-            {
-                File.WriteAllText(toolStripStatusLabel1.Text, textBox1.Text);
-                toolStripStatusLabel2.Text = "";
-            }
-        }
-
-
-
-
-    private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.FileName = "";
-            openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            openFileDialog1.ShowDialog();
-            if ( openFileDialog1.FileName != "")
-            {
-                content = File.ReadAllText(openFileDialog1.FileName);
-                textBox1.Text = File.ReadAllText(openFileDialog1.FileName);
-            }
-            
-
-        }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             textBox1.Text = "";
+            toolStripStatusLabel2.Text = "";
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -140,6 +151,27 @@ namespace WinFormsApp1
                 }
  
             }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(toolStripStatusLabel2.Text == "*")
+            {
+                DialogResult result = MessageBox.Show("Do you wanna do something?", "Warning", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    saveButton();
+                }
+                else if (result == DialogResult.No)
+                {
+
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+            }
+
         }
     }
 }
