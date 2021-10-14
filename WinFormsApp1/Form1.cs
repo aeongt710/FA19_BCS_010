@@ -12,13 +12,14 @@ namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
-        String content="";
         public Form1()
         {
             InitializeComponent();
             this.Text = "Notepad";
-            
+            textBox1.ScrollBars = ScrollBars.Vertical;
+            this.WindowState = FormWindowState.Maximized;
         }
+
 
 
         private void Form1_Load(object sender, EventArgs e)
@@ -33,10 +34,10 @@ namespace WinFormsApp1
 
         public void saveButton()
         {
-            if (toolStripStatusLabel1.Text.Length == 0)
+            if (toolStripStatusLabel1.Text == ""|| toolStripStatusLabel1.Text== "No file selected")
             {
                 saveFileDialog1.FileName = "";
-                saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                saveFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
                 saveFileDialog1.ShowDialog();
                 if (saveFileDialog1.FileName != "")
                 {
@@ -60,66 +61,45 @@ namespace WinFormsApp1
     private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = "";
-            openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
             openFileDialog1.ShowDialog();
             if ( openFileDialog1.FileName != "")
             {
-                content = File.ReadAllText(openFileDialog1.FileName);
                 textBox1.Text = File.ReadAllText(openFileDialog1.FileName);
+                toolStripStatusLabel1.Text = openFileDialog1.FileName;
+                toolStripStatusLabel2.Text = "";
+            }
+            else
+            {
+                if(toolStripStatusLabel1.Text=="")
+                    toolStripStatusLabel1.Text = "No file selected";
             }
         }
-
-
-        //protected override void OnTextChanged(out Position line, out Position column)
-        //{
-        //    line = 0; column = 0;
-        //    int caret = this.CaretIndex;
-        //    int iLine = this.GetLineIndexFromCharacterIndex(caret);
-        //    if (iLine < 0) iLine = 0;
-        //    line = iLine;
-        //    int firstChar = this.GetCharacterIndexFromLineIndex(iLine);
-        //    if (firstChar < 0) firstChar = 0;
-        //    column = caret - firstChar;
-        //    base.OnTextChanged(e);
-        //}
 
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             textBox1.Text = "";
+            toolStripStatusLabel1.Text = "";
             toolStripStatusLabel2.Text = "";
         }
 
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
-            int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
-            //label1.Text = line + "";
-        }
+
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             toolStripStatusLabel2.Text = "*";
+            int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
+            int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
+            toolStripStatusLabel4.Text = "Ln, " + line + " Col, " + column;
         }
 
         private void fontToolStripMenuItem_Click(object sender, EventArgs e)
         {
             fontDialog1.ShowDialog();
             textBox1.Font = fontDialog1.Font;
-
         }
 
-        private void textBox1_CursorChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_VisibleChanged(object sender, EventArgs e)
-        {
-            int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
-            int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
-            toolStripStatusLabel4.Text = "Ln, " + line + " Col, " + column;
-        }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -157,7 +137,7 @@ namespace WinFormsApp1
         {
             if(toolStripStatusLabel2.Text == "*")
             {
-                DialogResult result = MessageBox.Show("Do you wanna do something?", "Warning", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                DialogResult result = MessageBox.Show("Do you want to save changes?", "Notepad", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
                     saveButton();
@@ -173,5 +153,48 @@ namespace WinFormsApp1
             }
 
         }
+
+        private void findToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBox1.SelectAll();
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            MessageBox.Show("asdasd");
+
+        }
+
+        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (toolStripStatusLabel2.Text == "*")
+            {
+                DialogResult result = MessageBox.Show("Do you want to save changes?", "Notepad", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    saveButton();
+                }
+                else if (result == DialogResult.No)
+                {
+                    this.Dispose();
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                   
+                }
+            }
+        }
+
+        private void textBox1_Validated(object sender, EventArgs e)
+        {
+            int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
+            int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
+            toolStripStatusLabel4.Text = "Ln, " + line + " Col, " + column;
+        }
     }
+        //int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
+        //int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
+        //toolStripStatusLabel4.Text = "Ln, " + line + " Col, " + column;
 }
+
