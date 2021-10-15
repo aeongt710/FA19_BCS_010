@@ -50,6 +50,7 @@ namespace WinFormsApp1
                     File.WriteAllText(saveFileDialog1.FileName, textBox1.Text);
                     toolStripStatusLabelFilepath.Text = saveFileDialog1.FileName;
                     toolStripStatusLabelTextChanged.Text = "";
+                    this.Text = System.IO.Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)+" - Notepad";
                 }
                 else
                 {
@@ -60,11 +61,39 @@ namespace WinFormsApp1
             {
                 File.WriteAllText(toolStripStatusLabelFilepath.Text, textBox1.Text);
                 toolStripStatusLabelTextChanged.Text = "";
+                this.Text = System.IO.Path.GetFileNameWithoutExtension(saveFileDialog1.FileName) + " - Notepad";
             }
         }
+        private void wrapTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (wrapTextToolStripMenuItem.Checked == false)
+            {
+                textBox1.WordWrap = true;
+                wrapTextToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                textBox1.WordWrap = false;
+                wrapTextToolStripMenuItem.Checked = false;
+            }
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (toolStripStatusLabelTextChanged.Text == "*")
+            {
+                DialogResult result = MessageBox.Show("Do you want to save changes?", "Notepad", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    saveButton();
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+            }
 
-
-    private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        }
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = "";
             openFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
@@ -74,6 +103,7 @@ namespace WinFormsApp1
                 textBox1.Text = File.ReadAllText(openFileDialog1.FileName);
                 toolStripStatusLabelFilepath.Text = openFileDialog1.FileName;
                 toolStripStatusLabelTextChanged.Text = "";
+                this.Text = System.IO.Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + " - Notepad";
             }
             else
             {
@@ -88,6 +118,7 @@ namespace WinFormsApp1
             textBox1.Text = "";
             toolStripStatusLabelFilepath.Text = "";
             toolStripStatusLabelTextChanged.Text = "";
+            this.Text = "Notepad";
         }
 
 
@@ -95,7 +126,7 @@ namespace WinFormsApp1
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             toolStripStatusLabelTextChanged.Text = "*";
-            //PointerLocation();
+            this.Text = "*" + Path.GetFileName(toolStripStatusLabelFilepath.Text) +" - Notepad";
         }
 
 
@@ -131,26 +162,7 @@ namespace WinFormsApp1
             }
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if(toolStripStatusLabelTextChanged.Text == "*")
-            {
-                DialogResult result = MessageBox.Show("Do you want to save changes?", "Notepad", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                if (result == DialogResult.Yes)
-                {
-                    saveButton();
-                }
-                else if (result == DialogResult.No)
-                {
 
-                }
-                else if (result == DialogResult.Cancel)
-                {
-                    e.Cancel = true;
-                }
-            }
-
-        }
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -167,19 +179,7 @@ namespace WinFormsApp1
             
         }
 
-        private void wrapTextToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (wrapTextToolStripMenuItem.Checked == false)
-            {
-                textBox1.WordWrap = true;
-                wrapTextToolStripMenuItem.Checked = true;
-            }
-            else
-            {
-                textBox1.WordWrap = false;
-                wrapTextToolStripMenuItem.Checked = false;
-            }
-        }
+
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -210,22 +210,18 @@ namespace WinFormsApp1
             {
                 File.WriteAllText(saveFileDialog1.FileName, textBox1.Text);
                 toolStripStatusLabelFilepath.Text = saveFileDialog1.FileName;
+                this.Text = System.IO.Path.GetFileNameWithoutExtension(saveFileDialog1.FileName)+" - Notepad";
             }
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Name: Muhammad Ahmad\nReg No: FA19-BCS-010\nCourse: Visual Programming\nSection: BCS-5A","About Notepad");
+            MessageBox.Show("Name:      Muhammad Ahmad\nReg No:   FA19-BCS-010\nCourse:    Visual Programming\nSection:    BCS-5A","About Notepad");
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             textBox1.Undo();
-        }
-
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-           
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
