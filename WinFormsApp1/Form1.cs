@@ -21,7 +21,12 @@ namespace WinFormsApp1
             this.Icon = new Icon("icons8_txt.ico");
         }
 
-
+        public void PointerLocation()
+        {
+            int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
+            int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
+            toolStripStatusLabelPointer.Text = "Ln, " + line + " Col, " + column;
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -90,9 +95,7 @@ namespace WinFormsApp1
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             toolStripStatusLabelTextChanged.Text = "*";
-            int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
-            int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
-            toolStripStatusLabelPointer.Text = "Ln, " + line + " Col, " + column;
+            //PointerLocation();
         }
 
 
@@ -156,13 +159,6 @@ namespace WinFormsApp1
 
 
 
-
-        private void textBox1_Validated(object sender, EventArgs e)
-        {
-            int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
-            int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
-            toolStripStatusLabelPointer.Text = "Ln, " + line + " Col, " + column;
-        }
 
         private void fontToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -231,9 +227,16 @@ namespace WinFormsApp1
         {
            
         }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            PointerLocation();
+        }
+
+        private void textBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            PointerLocation();
+        }
     }
-        //int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
-        //int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
-        //toolStripStatusLabel4.Text = "Ln, " + line + " Col, " + column;
 }
 
