@@ -61,7 +61,7 @@ namespace WinFormsApp1
             {
                 File.WriteAllText(toolStripStatusLabelFilepath.Text, textBox1.Text);
                 toolStripStatusLabelTextChanged.Text = "";
-                this.Text = System.IO.Path.GetFileNameWithoutExtension(saveFileDialog1.FileName) + " - Notepad";
+                this.Text = System.IO.Path.GetFileNameWithoutExtension(toolStripStatusLabelFilepath.Text) + " - Notepad";
             }
         }
         private void wrapTextToolStripMenuItem_Click(object sender, EventArgs e)
@@ -162,15 +162,10 @@ namespace WinFormsApp1
             }
         }
 
-
-
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
         {
             textBox1.SelectAll();
         }
-
-
-
 
         private void fontToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -178,8 +173,6 @@ namespace WinFormsApp1
             textBox1.Font = fontDialog1.Font;
             
         }
-
-
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -235,4 +228,3 @@ namespace WinFormsApp1
         }
     }
 }
-
