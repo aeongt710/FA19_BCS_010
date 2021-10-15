@@ -162,7 +162,7 @@ namespace WinFormsApp1
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            MessageBox.Show("asdasd");
+            MessageBox.Show("Name: Muhammad Ahmad\nReg No: FA19-BCS-010\n");
 
         }
 
