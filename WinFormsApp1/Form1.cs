@@ -18,6 +18,7 @@ namespace WinFormsApp1
             this.Text = "Notepad";
             textBox1.ScrollBars = ScrollBars.Vertical;
             this.WindowState = FormWindowState.Maximized;
+            this.Icon = new Icon("icons8_txt.ico");
         }
 
 
@@ -34,7 +35,7 @@ namespace WinFormsApp1
 
         public void saveButton()
         {
-            if (toolStripStatusLabel1.Text == ""|| toolStripStatusLabel1.Text== "No file selected")
+            if (toolStripStatusLabelFilepath.Text == ""|| toolStripStatusLabelFilepath.Text== "No file selected")
             {
                 saveFileDialog1.FileName = "";
                 saveFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
@@ -42,18 +43,18 @@ namespace WinFormsApp1
                 if (saveFileDialog1.FileName != "")
                 {
                     File.WriteAllText(saveFileDialog1.FileName, textBox1.Text);
-                    toolStripStatusLabel1.Text = saveFileDialog1.FileName;
-                    toolStripStatusLabel2.Text = "";
+                    toolStripStatusLabelFilepath.Text = saveFileDialog1.FileName;
+                    toolStripStatusLabelTextChanged.Text = "";
                 }
                 else
                 {
-                    toolStripStatusLabel1.Text = "No file selected";
+                    toolStripStatusLabelFilepath.Text = "No file selected";
                 }
             }
             else
             {
-                File.WriteAllText(toolStripStatusLabel1.Text, textBox1.Text);
-                toolStripStatusLabel2.Text = "";
+                File.WriteAllText(toolStripStatusLabelFilepath.Text, textBox1.Text);
+                toolStripStatusLabelTextChanged.Text = "";
             }
         }
 
@@ -66,13 +67,13 @@ namespace WinFormsApp1
             if ( openFileDialog1.FileName != "")
             {
                 textBox1.Text = File.ReadAllText(openFileDialog1.FileName);
-                toolStripStatusLabel1.Text = openFileDialog1.FileName;
-                toolStripStatusLabel2.Text = "";
+                toolStripStatusLabelFilepath.Text = openFileDialog1.FileName;
+                toolStripStatusLabelTextChanged.Text = "";
             }
             else
             {
-                if(toolStripStatusLabel1.Text=="")
-                    toolStripStatusLabel1.Text = "No file selected";
+                if(toolStripStatusLabelFilepath.Text=="")
+                    toolStripStatusLabelFilepath.Text = "No file selected";
             }
         }
 
@@ -80,24 +81,18 @@ namespace WinFormsApp1
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             textBox1.Text = "";
-            toolStripStatusLabel1.Text = "";
-            toolStripStatusLabel2.Text = "";
+            toolStripStatusLabelFilepath.Text = "";
+            toolStripStatusLabelTextChanged.Text = "";
         }
 
 
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            toolStripStatusLabel2.Text = "*";
+            toolStripStatusLabelTextChanged.Text = "*";
             int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
             int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
-            toolStripStatusLabel4.Text = "Ln, " + line + " Col, " + column;
-        }
-
-        private void fontToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            fontDialog1.ShowDialog();
-            textBox1.Font = fontDialog1.Font;
+            toolStripStatusLabelPointer.Text = "Ln, " + line + " Col, " + column;
         }
 
 
@@ -135,7 +130,7 @@ namespace WinFormsApp1
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(toolStripStatusLabel2.Text == "*")
+            if(toolStripStatusLabelTextChanged.Text == "*")
             {
                 DialogResult result = MessageBox.Show("Do you want to save changes?", "Notepad", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
@@ -159,16 +154,40 @@ namespace WinFormsApp1
             textBox1.SelectAll();
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+
+
+
+        private void textBox1_Validated(object sender, EventArgs e)
         {
-
-            MessageBox.Show("Name: Muhammad Ahmad\nReg No: FA19-BCS-010\n");
-
+            int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
+            int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
+            toolStripStatusLabelPointer.Text = "Ln, " + line + " Col, " + column;
         }
 
-        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void fontToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (toolStripStatusLabel2.Text == "*")
+            fontDialog1.ShowDialog();
+            textBox1.Font = fontDialog1.Font;
+            
+        }
+
+        private void wrapTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (wrapTextToolStripMenuItem.Checked == false)
+            {
+                textBox1.WordWrap = true;
+                wrapTextToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                textBox1.WordWrap = false;
+                wrapTextToolStripMenuItem.Checked = false;
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (toolStripStatusLabelTextChanged.Text == "*")
             {
                 DialogResult result = MessageBox.Show("Do you want to save changes?", "Notepad", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
@@ -179,18 +198,38 @@ namespace WinFormsApp1
                 {
                     this.Dispose();
                 }
-                else if (result == DialogResult.Cancel)
-                {
-                   
-                }
+            }
+            else
+            {
+                this.Dispose();
             }
         }
 
-        private void textBox1_Validated(object sender, EventArgs e)
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
-            int column = textBox1.SelectionStart - textBox1.GetFirstCharIndexFromLine(line);
-            toolStripStatusLabel4.Text = "Ln, " + line + " Col, " + column;
+            saveFileDialog1.FileName = "";
+            saveFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            saveFileDialog1.ShowDialog();
+            if (saveFileDialog1.FileName != "")
+            {
+                File.WriteAllText(saveFileDialog1.FileName, textBox1.Text);
+                toolStripStatusLabelFilepath.Text = saveFileDialog1.FileName;
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Name: Muhammad Ahmad\nReg No: FA19-BCS-010\nCourse: Visual Programming\nSection: BCS-5A","About Notepad");
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBox1.Undo();
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           
         }
     }
         //int line = textBox1.GetLineFromCharIndex(textBox1.SelectionStart);
